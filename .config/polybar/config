@@ -1,0 +1,192 @@
+;==========================================================
+;
+;
+;   ██████╗  ██████╗ ██╗  ██╗   ██╗██████╗  █████╗ ██████╗
+;   ██╔══██╗██╔═══██╗██║  ╚██╗ ██╔╝██╔══██╗██╔══██╗██╔══██╗
+;   ██████╔╝██║   ██║██║   ╚████╔╝ ██████╔╝███████║██████╔╝
+;   ██╔═══╝ ██║   ██║██║    ╚██╔╝  ██╔══██╗██╔══██║██╔══██╗
+;   ██║     ╚██████╔╝███████╗██║   ██████╔╝██║  ██║██║  ██║
+;   ╚═╝      ╚═════╝ ╚══════╝╚═╝   ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝
+;
+;
+;   To learn more about how to configure Polybar
+;   go to https://github.com/jaagr/polybar
+;
+;   The README contains alot of information
+;
+;==========================================================
+
+[colors]
+background = #dd222222
+background-alt = #99676767
+foreground = #dfdfdf
+foreground-alt = #999
+primary = #ffb52a
+secondary = #e60053
+alert = #bd2c40
+
+[bar/wjacobc]
+;monitor = ${env:MONITOR:HDMI-1}
+width = 100%
+height = 40
+;offset-x = 20%
+;offset-y = 1%
+;radius = 6.0
+fixed-center = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 3
+line-color = #f00
+
+;border-size = 5
+border-color = #00000000
+
+padding-left = 0
+padding-right = 3
+
+module-margin-left = 1
+module-margin-right = 1
+
+; The ; after the font config is vertical offset
+; why they would use the comment character for something
+; non-comment related is beyond me
+font-0 = hack:size=16;3
+font-1 = unifont:fontformat=truetype:size=13:antialias=false;0
+font-2 = "Siji"
+font-3 = FontAwesome5Free:style=Solid:pixelsize=13:antialias=true;3
+
+modules-left = i3
+modules-center = spotify
+modules-right = weather battery date pulseaudio
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:30:...%
+
+[module/bspwm]
+type = internal/bspwm
+
+label-focused = %index%
+label-focused-background = ${colors.background-alt}
+label-focused-underline= ${colors.primary}
+label-focused-padding = 2
+
+label-occupied = %index%
+label-occupied-padding = 2
+
+label-urgent = %index%!
+label-urgent-background = ${colors.alert}
+label-urgent-padding = 2
+
+label-empty = %index%
+label-empty-foreground = ${colors.foreground-alt}
+label-empty-padding = 2
+
+; Separator in between workspaces
+; label-separator = |
+
+[module/i3]
+type = internal/i3
+format = <label-state> <label-mode>
+index-sort = true
+wrapping-scroll = false
+
+; Only show workspaces on the same output as the bar
+;pin-workspaces = true
+
+label-mode-padding = 2
+label-mode-foreground = #000
+label-mode-background = ${colors.primary}
+
+; focused = Active workspace on focused monitor
+label-focused = %index%
+label-focused-background = ${module/bspwm.label-focused-background}
+;label-focused-underline = ${module/bspwm.label-focused-underline}
+label-focused-underline =
+label-focused-padding = ${module/bspwm.label-focused-padding}
+
+; unfocused = Inactive workspace on any monitor
+label-unfocused = %index%
+label-unfocused-padding = ${module/bspwm.label-occupied-padding}
+
+; visible = Active workspace on unfocused monitor
+label-visible = %index%
+label-visible-background = ${self.label-focused-background}
+label-visible-underline = ${self.label-focused-underline}
+label-visible-padding = ${self.label-focused-padding}
+
+; urgent = Workspace with urgency hint set
+label-urgent = %index%
+label-urgent-background = ${module/bspwm.label-urgent-background}
+label-urgent-padding = ${module/bspwm.label-urgent-padding}
+
+; Separator in between workspaces
+; label-separator = |
+
+[module/date]
+type = internal/date
+interval = 5
+
+date = " %B %d"
+date-alt = " %Y-%m-%d"
+
+time = "%I:%M %p  "
+time-alt = %H:%M:%S
+
+;format-prefix = 
+format-prefix-foreground = ${colors.foreground}
+;format-underline = #0a6cf5
+format-underline =
+
+label = " %time% %date%"
+
+[module/pulseaudio]
+type = internal/pulseaudio
+
+;format-volume = <label-volume> <bar-volume>
+format-volume = <label-volume>
+label-volume =  %percentage%%
+label-volume-foreground = ${root.foreground}
+
+label-muted =  00%
+label-muted-foreground = #999
+
+[module/weather]
+type = custom/script
+interval = 1800
+format = <label>
+exec = python3 ~/.scripts/weather_report.py
+
+[module/battery]
+type = custom/script
+interval = 5
+format = <label>
+exec = ~/.scripts/get_power.sh
+click-left = upower --show-info /org/freedesktop/UPower/devices/battery_BAT0 | grep "^\s*time" | ~/.scripts/wrap.sh \" | xargs notify-send
+
+[module/spotify]
+type = custom/script
+interval = 3
+format-prefix = " "
+format = <label>
+exec = python3 ~/.scripts/spotify_status.py -f '{artist}: {song}'
+
+[settings]
+screenchange-reload = true
+;compositing-background = xor
+;compositing-background = screen
+;compositing-foreground = source
+;compositing-border = over
+;pseudo-transparency = false
+
+[global/wm]
+margin-top = 5
+margin-bottom = 0
+
+
+; vim:ft=dosini
