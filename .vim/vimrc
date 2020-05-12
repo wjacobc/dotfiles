@@ -1,0 +1,49 @@
+" Turning off vi mode and enabling the ruler bar
+set nocompatible
+set ruler
+set autoindent
+
+" Split on the bottom and right
+set splitbelow
+set splitright
+
+" Colors
+syntax on
+let g:jellybeans_overrides = {
+\    'background': { 'ctermbg': 'none', '256ctermbg': 'none' },
+\}
+if has('termguicolors') && &termguicolors
+    let g:jellybeans_overrides['background']['guibg'] = 'none'
+endif
+colo jellybeans
+hi Normal guibg=NONE ctermbg=NONE
+hi LineNr guibg=NONE ctermbg=NONE
+hi CursorLineNr guibg=NONE ctermbg=NONE
+
+" Tabbing
+set expandtab
+set softtabstop=4
+set shiftwidth=4
+
+" Line numbers
+set number
+set relativenumber
+
+" Disable visual bell flash
+set noeb vb t_vb=
+
+" Plugin configuration
+call plug#begin('~/.vim/plugged')
+
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+call plug#end()
+
+" Airline theme
+let g:airline_theme='minimalist'
+set noshowmode
+set ttimeoutlen=10
+
+" Have .viminfo go inside .vim
+set viminfo+=n~/.vim/viminfo
